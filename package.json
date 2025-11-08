@@ -1,9 +1,9 @@
 {
   "name": "my-countroleum-app",
+  "homepage": "https://fachrihms.github.io/countroleum",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://fachrihms.github.io/countroleum",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -13,6 +13,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "gh-pages": "^6.3.0",
     "lucide-react": "^0.553.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
