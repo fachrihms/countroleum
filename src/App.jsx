@@ -2,7 +2,7 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import Countroleum from "./countroleum";
+import Countroleum from "./countroleumv2";
 
 function App() {
   // NOTE: Anda mungkin perlu menambahkan fungsi "window.storage" global
