@@ -66,6 +66,7 @@ const Countroleum = () => {
     10000, 15000, 20000, 25000,
   ]);
   const [showCustomAmountModal, setShowCustomAmountModal] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const [selectedStation, setSelectedStation] = useState("pertamina");
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -76,8 +77,10 @@ const Countroleum = () => {
   }, []);
 
   useEffect(() => {
-    saveData();
-  }, [fuelEntries, history, customAmounts]);
+    if (isLoaded) {
+      saveData();
+    }
+  }, [fuelEntries, history, customAmounts, isLoaded]);
 
   const loadData = async () => {
     try {
