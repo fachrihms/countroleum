@@ -84,29 +84,65 @@ const Countroleum = () => {
 
   const loadData = async () => {
     try {
-      const entriesData = await window.storage.get("fuel-entries");
-      const historyData = await window.storage.get("fuel-history");
-      const customAmountsData = await window.storage.get("custom-amounts");
+      // Try window.storage first (for Claude artifact)
+      if (typeof window.storage !== "undefined") {
+        const entriesData = await window.storage.get("fuel-entries");
+        const historyData = await window.storage.get("fuel-history");
+        const customAmountsData = await window.storage.get("custom-amounts");
 
-      if (entriesData) {
-        setFuelEntries(JSON.parse(entriesData.value));
+        if (entriesData && entriesData.value) {
+          setFuelEntries(JSON.parse(entriesData.value));
+        }
+        if (historyData && historyData.value) {
+          setHistory(JSON.parse(historyData.value));
+        }
+        if (customAmountsData && customAmountsData.value) {
+          setCustomAmounts(JSON.parse(customAmountsData.value));
+        }
+      } else {
+        // Fallback to localStorage (for GitHub Pages or other hosting)
+        const entriesData = localStorage.getItem("fuel-entries");
+        const historyData = localStorage.getItem("fuel-history");
+        const customAmountsData = localStorage.getItem("custom-amounts");
+
+        if (entriesData) {
+          setFuelEntries(JSON.parse(entriesData));
+        }
+        if (historyData) {
+          setHistory(JSON.parse(historyData));
+        }
+        if (customAmountsData) {
+          setCustomAmounts(JSON.parse(customAmountsData));
+        }
       }
-      if (historyData) {
-        setHistory(JSON.parse(historyData.value));
-      }
-      if (customAmountsData) {
-        setCustomAmounts(JSON.parse(customAmountsData.value));
-      }
+
+      setIsLoaded(true);
     } catch (error) {
-      console.log("No saved data found, using defaults");
+      console.log("No saved data found or error loading:", error);
+      setIsLoaded(true);
     }
   };
 
   const saveData = async () => {
+    if (!isLoaded) return;
+
     try {
-      await window.storage.set("fuel-entries", JSON.stringify(fuelEntries));
-      await window.storage.set("fuel-history", JSON.stringify(history));
-      await window.storage.set("custom-amounts", JSON.stringify(customAmounts));
+      // Try window.storage first (for Claude artifact)
+      if (typeof window.storage !== "undefined") {
+        await window.storage.set("fuel-entries", JSON.stringify(fuelEntries));
+        await window.storage.set("fuel-history", JSON.stringify(history));
+        await window.storage.set(
+          "custom-amounts",
+          JSON.stringify(customAmounts)
+        );
+        console.log("Data saved to window.storage");
+      } else {
+        // Fallback to localStorage (for GitHub Pages or other hosting)
+        localStorage.setItem("fuel-entries", JSON.stringify(fuelEntries));
+        localStorage.setItem("fuel-history", JSON.stringify(history));
+        localStorage.setItem("custom-amounts", JSON.stringify(customAmounts));
+        console.log("Data saved to localStorage");
+      }
     } catch (error) {
       console.error("Failed to save data:", error);
     }
